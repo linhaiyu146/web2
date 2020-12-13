@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		*{
+			padding: 0;
+			margin: 0;
+		}
+		body{
+			background-color: #999;
+		}
+		.tupian{
+			width: 400px;
+			height: 600px;
+			border: 8px solid red;
+			margin: 30px auto;
+			position: relative;
+		}
+		.lun img{
+			width: 400px;
+			height: 600px;
+		}
+		.lun a{
+			display: none;
+		}
+		.lun a.on{
+			display: block;
+		}
+		.item{
+			position: absolute;
+			bottom: 5px;
+			left: 50%;
+			transform: translateX(-50%);
+		}
+		.item li{
+			float: left;
+			width: 10px;
+			height: 10px;
+			list-style: none;
+			border-radius: 50%;
+			background-color: #fff;
+			margin-right: 10px;
+		}
+		.item li.current{
+			background-color: orange;
+		}
+		.al{
+			width: 30px;
+			height: 200px;
+			display: inline-block;
+			position: absolute;
+			top: 174px;
+			background:rgba(255,255,255,0.3);
+			display: none;
+		}
+		.ar{
+			width: 30px;
+			height: 200px;
+			display: inline-block;
+			position: absolute;
+			top: 174px;
+			right: 0;
+			background:rgba(255,255,255,0.3);
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div class="tupian">
+		<!--轮播区-->
+		<div class="lun">
+			<a href="/desk/22693.htm" class="on"><img src="http://img.netbian.com/file/2020/0602/small62ecd943fc47da558796bf90b21361f81591107940.jpg"></a>
+			<a href="/desk/22683.htm"><img src="http://img.netbian.com/file/2020/0528/smalla196272440b235d8108b1ecc80d3b2281590639655.jpg"></a>
+			<a href="/desk/22685.htm"><img src="http://img.netbian.com/file/2020/0528/small8249e4819cd1087c470cc3e1cf2162d21590641220.jpg"></a>
+			<a href="/desk/22684.htm"><img src="http://img.netbian.com/file/2020/0528/small16aeee2e2f1c88e5c9b05dcd096a0fa21590639939.jpg"></a>
+			<a href="/desk/22542.htm"><img src="http://img.netbian.com/file/2020/0311/small2f5769e71b81734b7380eb25315b2b161583933712.jpg"></a>
+			<a href="/desk/22511.htm"><img src="http://img.netbian.com/file/2020/0218/small97b4c27fe00f4c661797a49d7bff33941582033707.jpg"></a>
+			<a href="/desk/22474.htm"><img src="http://img.netbian.com/file/2020/0203/smalle961c6c3eda3fa2bfc48d0805e72e1751580700950.jpg"></a>
+			<a href="/desk/22566.htm"><img src="http://img.netbian.com/file/2020/0324/small2ff9e829a574a9be300c0da3729dc0211585061104.jpg"></a>
+			<a href="/desk/22598.htm"><img src="http://img.netbian.com/file/2020/0405/small823f5bc5e022d8664ce3cc40760b28991586090546.jpg"></a>
+           </div>
+		<ul class="item">
+			<li class="current"></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+		<a href="#" class="al">  <  </a>
+		<a href="#" class="ar">  >  </a>
+	</div>
+
+	<script type="text/javascript">
+		//获取元素
+		var o=document.querySelector('.tupian');
+		var as=document.querySelector('.lun').querySelectorAll('a');
+		var lis=document.querySelector('.item').querySelectorAll('li');
+		var al=document.querySelector('.al');
+		var ar=document.querySelector('.ar');
+
+		var index=0;//保存当前展示的轮播图的索引，默认0
+		var len=as.length;
+		var t;
+
+		//自动轮播
+		t=setInterval(moveNext,3000);
+		//鼠标经过，停止轮播
+		o.onmouseover=function(){
+			clearInterval(t);
+			o.style.cursor='pointer';
+			al.style.display='block';
+			ar.style.display='block';
+		};
+
+		//鼠标离开，继续轮播
+		o.onmouseout=function(){
+			t=setInterval(moveNext,2000);
+			al.style.display='none';
+			ar.style.display='none';
+		};
+
+		//指示器轮播
+		for(var i=0;i<lis.length;i++){
+			lis[i]._index=i;//新增属性，保存位置
+			//为每一个li追加点击事件
+			lis[i].onclick=function(){
+				//当前显示的li，修改为未选中状态
+				lis[index].className='';
+				as[index].className='';//当前显示的轮播图改为不显示
+
+				this.className='current';//被点击的li，改为选中状态
+				as[this._index].className='on';//轮播显示为对应
+
+				//修改index值
+				index=this._index;
+
+			};
+		}
+
+		//箭头轮播
+			//右箭头
+			al.onclick=function(){
+				movePre();
+			};
+
+			//左箭头
+			ar.onclick=function(){
+				moveNext();
+			};
+
+		//切换下一张
+		function moveNext(){
+			as[index].className='';//当前显示的轮播图改为不显示
+			lis[index].className='';//当前指示器不显示
+			index++;//索引递增
+			if (index==len) {
+				index=0;//最后一张切换为第一张
+			}
+			as[index].className='on';//下一张显示
+			lis[index].className='current';
+		}
+
+		//切换上一张
+		function movePre(){
+			as[index].className='';
+			lis[index].className='';
+			index--;
+			if (index==-1) {
+				index=len-1;//第一张时，修改为最后一张
+			}
+			//上一张展示
+			as[index].className='on';
+			lis[index].className='current';
+		}
+	</script>
+</body>
+</html>
